@@ -1,0 +1,25 @@
+#First we make sure that Cassandra is running, then we enter the Cassandra shell
+sudo systemctl start cassandra
+cqlsh
+
+
+#First we create a Keyspace for the overall project
+CREATE KEYSPACE projectip WITH REPLICATION = {'class' : 'SimpleStrategy','replication_factor' : 1};
+
+##Now we create a table for the parsed IPs
+CREATE TABLE projectip.parsedips(ipaaddress text PRIMARY KEY, ipcount int);
+
+#Now we import our parsedIPs from our MapReduce output
+COPY projectip.parsedips FROM '~/reducedLogs/part-r-00000' WITH DELIMITER='\t';
+
+##Now we create a table for the GeoLite2 IP Networks
+CREATE TABLE projectip.geonetworks(network text PRIMARY KEY, geoname_id int);
+
+#Now we import only the required columns from the GeoLite2 Network csv
+COPY projectip.geonetworks(network, geoname_id) FROM '~/geolite2/geoNetworks.csv' WITH DELIMITER=',' AND HEADER = TRUE;
+
+##Now we create a table for the GeoLite2 Countries
+CREATE TABLE projectip.geocountries(geoname_id int PRIMARY KEY, country_name text);
+
+#Now we import only the required columns from the GeoLite2 country csv
+COPY projectip.geocountries(geoname_id, country_name) FROM '~/geolite2/geoCountriesParsed.csv' WITH DELIMITER=',' AND HEADER = TRUE;

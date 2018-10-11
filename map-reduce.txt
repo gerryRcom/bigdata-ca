@@ -1,0 +1,25 @@
+##The following steps reset/ delete the previous attempt and run a new MapReduce
+rm -r ~/tmp
+rm -r ~/hdfs
+mkdir ~/tmp
+mkdir ~/hdfs
+chmod 750 ~/hdfs
+
+cd /usr/local/hadoop
+bin/hdfs namenode -format
+
+sbin/start-dfs.sh
+sbin/start-yarn.sh
+
+bin/hdfs dfs -mkdir /user
+bin/hdfs dfs -mkdir /user/hduser
+bin/hdfs dfs -mkdir /user/hduser/ipParse
+bin/hdfs dfs -copyFromLocal ~/incoming-logs/parsedIPs.txt /user/hduser/ipParse
+
+bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.1.jar wordcount /user/hduser/ipParse /user/hduser/ipParse-output
+
+#check the output was generated
+bin/hdfs dfs -ls /user/hduser/ipParse-output
+
+mkdir ~/reducedLogs
+bin/hdfs dfs -get /user/hduser/ipParse-output/part-r-00000 ~/reducedLogs

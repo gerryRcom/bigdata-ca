@@ -1,7 +1,9 @@
+#Import glob for handeling filename patterns
 import glob
-logs = glob.glob("C:/Users/Administrator/OneDrive - gerryR.com/DBS-Content/Big-Data/CA/code/*.log")
+logs = glob.glob('*.log*')
 for log in logs:
-    with open(log) as readLog, open('C:/Users/Administrator/OneDrive - gerryR.com/DBS-Content/Big-Data/CA/code/parsedIPs.txt','a') as writeLog:
+    with open(log) as readLog, open('parsedIPs.txt','a') as writeLog:
+        #Skip the 1st line as it is a type of header in the logs
         next(readLog)
         for line in readLog:
             parsed = line.split()

@@ -1,0 +1,7 @@
+#Need to create a MySql database and user to allow PySpark insert it's results
+
+sudo mysql -user root -p
+CREATE DATABASE ipproject;
+USE ipproject;
+CREATE TABLE spark_output (id int NOT NULL AUTO_INCREMENT, Country varchar(50), PRIMARY KEY (id));
+GRANT ALL ON ipproject.* TO 'ipdbuser'@'%' IDENTIFIED BY 'hadoop.2018';

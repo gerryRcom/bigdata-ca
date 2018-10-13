@@ -2,7 +2,6 @@
 sudo systemctl start cassandra
 cqlsh
 
-
 #First we create a Keyspace for the overall project
 CREATE KEYSPACE projectip WITH REPLICATION = {'class' : 'SimpleStrategy','replication_factor' : 1};
 
